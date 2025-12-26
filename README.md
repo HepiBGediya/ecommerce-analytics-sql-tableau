@@ -1,249 +1,209 @@
-**📊 E-Commerce Analytics Project (SQL + Tableau)**
+# E-Commerce Analytics Project (SQL + Tableau)
 
-**Project Overview**
+## Project Overview
 
-This project is a comprehensive E-Commerce Analytics solution built using PostgreSQL (SQL) and Tableau.
-It analyzes sales performance, product behavior, returns, and customer value & retention to help business stakeholders make data-driven decisions.
+This project is a comprehensive **end-to-end E-Commerce Analytics solution** built using **PostgreSQL (SQL)** and **Tableau**.  
+It analyzes **sales performance, product behavior, returns, and customer value & retention** to help business stakeholders make **data-driven decisions**.
 
 The project follows a real-world analytics workflow:
 
-Raw data → Cleaned data → SQL views (data modeling) → Tableau dashboards → Business insights
+**Raw Data → Cleaned Data → SQL Views (Data Modeling) → Tableau Dashboards → Business Insights**
 
-**Business Objectives**
+---
 
-The main goals of this project are to:
+## Business Objectives
 
-Track overall sales performance
+The primary goals of this project are to:
 
-Identify seasonal revenue trends
+- Track overall sales performance and key KPIs  
+- Identify seasonal and daily revenue trends  
+- Analyze top-performing products  
+- Understand product return behavior  
+- Measure customer value and retention  
+- Apply **Pareto (80/20) analysis** on products and customers  
+- Support strategic decisions in **marketing, inventory, and customer retention**
 
-Analyze top-performing products
+---
 
-Understand product return behavior
+## Dataset Description
 
-Measure customer value and retention
+- **Source:** Online Retail Transaction Dataset (public dataset)  
+- **Granularity:** Order line level  
 
-Apply Pareto (80/20) analysis on products and customers
+### Key Fields
+- Invoice No  
+- Invoice Date  
+- Stock Code  
+- Product Description  
+- Quantity  
+- Unit Price  
+- Revenue  
+- Customer ID  
+- Country  
+- Return Flag  
 
-Support strategic decisions in marketing, inventory, and customer retention
+The dataset includes both **completed sales and returns**, enabling realistic and business-relevant analysis.
 
-**Dataset Description**
+---
 
-Source: Online Retail Transaction Dataset
+## Tech Stack
 
-Granularity: Order line level
+- **Database:** PostgreSQL  
+- **Query Language:** SQL  
+- **BI Tool:** Tableau  
+- **Version Control:** GitHub  
 
-Key Fields:
+---
 
-Invoice No
+## Data Modeling & SQL Views
 
-Invoice Date
+To ensure **KPI accuracy, scalability, and reusability**, analysis is performed using **SQL views** instead of querying raw data directly.
 
-Stock Code
+### Core Helper Views
 
-Product Description
+- **vw_orders**
+  - One row per invoice  
+  - Used for orders, revenue, AOV, and customer analysis  
 
-Quantity
+- **vw_lines**
+  - Line-level normalized revenue  
+  - Used for product and return analysis  
 
-Unit Price
+---
 
-Revenue
+## Fact Views (Key Design Decision)
 
-Customer ID
+### vw_fact_sales
 
-Country
+**Purpose:** Sales KPIs, time-series, geography, and customer analysis  
 
-Return Flag
+- One row per order  
+- Safe for:
+  - Total Revenue  
+  - Total Orders  
+  - Average Order Value (AOV)  
+  - Monthly & Daily Revenue  
+  - Country-level Revenue  
+  - Customer metrics  
 
-The dataset includes completed sales and returns, allowing realistic business analysis.
+This design avoids **double counting**, a common analytics mistake when working with transactional data.
 
-**Tech Stack**
+---
 
-Database: PostgreSQL
+### vw_fact_product
 
-Query Language: SQL
-
-BI Tool: Tableau
-
-Version Control: GitHub
-
-**Data Modeling & SQL Views**
-
-To ensure accuracy and reusability, multiple SQL views were created instead of querying raw data directly.
-
-**Core Helper Views**
-
-vw_orders
-
-One row per invoice
-
-Used for orders, revenue, AOV, and customers
-
-vw_lines
-
-Line-level normalized revenue
-
-Used for product and return analysis
-
-**Fact Views (Key Design Decision)**
-
-**vw_fact_sales**
-
-Purpose: Sales, KPI, time-series, country, and customer analysis
-
-One row per order
-
-Safe for:
-
-Total Revenue
-
-Total Orders
-
-AOV
-
-Monthly & Daily Revenue
-
-Country-level Revenue
-
-Customer analysis
-
-This avoids double counting, a common analytics mistake.
-
-**vw_fact_product**
-
-Purpose: Product performance & return analysis
+**Purpose:** Product performance and return analysis  
 
 Includes:
+- Sold quantity  
+- Returned quantity  
+- SKU revenue  
+- Return rate  
+- Revenue share  
+- Cumulative revenue share (Pareto)  
+- Revenue ranking  
 
-Sold quantity
+This view enables **accurate 80/20 analysis** and **return diagnostics**.
 
-Returned quantity
+---
 
-SKU revenue
+## Tableau Dashboards
 
-Return rate
+### 1. Sales Performance Overview
 
-Revenue share
+**KPIs**
+- Total Revenue  
+- Total Orders  
+- Average Order Value (AOV)  
+- Total Customers  
 
-Cumulative revenue share (Pareto)
-
-Revenue ranking
-
-This view enables accurate 80/20 analysis and return diagnostics.
-
-**Tableau Dashboards**
-
-**1. Sales Performance Overview**
-KPIs
-
-Total Revenue
-
-Total Orders
-
-Average Order Value (AOV)
-
-Total Customers
-
-Charts
-
-Monthly Revenue Trend
-
-Daily Revenue Trend
-
-Country-wise Revenue Map
+**Visuals**
+- Monthly Revenue Trend  
+- Daily Revenue Trend  
+- Country-wise Revenue Map  
 
 **Insights**
+- Strong revenue seasonality with a Q4 peak  
+- UK contributes over 90% of total revenue  
+- Daily revenue shows high volatility, likely driven by promotions  
 
-Strong revenue seasonality with Q4 peak
+---
 
-UK contributes >90% of total revenue
+### 2. Product Performance & Return Analysis
 
-Daily revenue shows high volatility, likely due to promotions
-
-**2. Product Performance & Return Analysis**
-
-Visuals
-
-Top 10 Products by Revenue
-
-Product Pareto (80/20 Rule)
-
-Return Rate by Product
+**Visuals**
+- Top 10 Products by Revenue  
+- Product Pareto (80/20 Rule)  
+- Return Rate by Product  
 
 **Insights**
+- ~20% of products generate ~80% of total revenue  
+- A small number of SKUs have abnormally high return rates  
+- High-return products may indicate quality or expectation mismatch  
 
-~20% of products generate ~80% of revenue
+---
 
-Few SKUs have abnormally high return rates
+### 3. Customer Value & Retention
 
-High-return products may indicate quality or expectation mismatch
-
-**3. Customer Value & Retention**
-
-Visuals
-
-Top 10 Customers by Revenue
-
-Customer Pareto (80/20 Rule)
-
-Repeat vs One-Time Customers
+**Visuals**
+- Top 10 Customers by Revenue  
+- Customer Pareto (80/20 Rule)  
+- Repeat vs One-Time Customers  
 
 **Insights**
+- Revenue is highly concentrated among top customers  
+- Repeat customers dominate revenue contribution  
+- Business growth depends more on **retention** than acquisition  
 
-Revenue is highly concentrated among top customers
+---
 
-Repeat customers dominate revenue contribution
+## Key Business Insights
 
-Business growth depends more on retention than acquisition
+- Revenue shows strong seasonality with a peak in Q4  
+- UK contributes the majority of total revenue  
+- Top ~20% of products generate ~80% of revenue (Pareto principle)  
+- High return rates are concentrated in a small subset of products  
+- Repeat customers drive a significant share of overall revenue  
 
-**Key Business Insights (Summary)**
+---
 
-Revenue is seasonal and concentrated
+## Business Recommendations
 
-Small subset of products and customers drive most revenue
+- Focus inventory and promotions on the top 20% of products  
+- Investigate and fix high-return SKUs (quality, packaging, or expectations)  
+- Strengthen loyalty programs to retain high-value repeat customers  
+- Reduce dependency on a single geography by exploring new markets  
+- Use daily revenue volatility insights to optimize campaign timing  
 
-Returns are not evenly distributed across products
+---
 
-Retaining high-value customers is critical for long-term growth
+## Dashboards
 
-**Business Recommendations**
+Screenshots of all Tableau dashboards are available in the `reports/` folder.
 
-Focus inventory and promotions on top 20% products
+---
 
-Investigate and fix high-return SKUs
+## Outcome
 
-Strengthen loyalty programs for repeat customers
+This project demonstrates the ability to deliver a **complete, real-world E-Commerce analytics solution** from raw data to business-ready insights.
 
-Reduce dependency on a single geography by exploring new markets
+Through this project, I successfully:
 
-Use daily revenue volatility to optimize campaign timing
+- Designed **accurate SQL data models** using fact and helper views to prevent double counting  
+- Built **reliable KPIs** for revenue, orders, AOV, customers, products, and returns  
+- Applied **Pareto (80/20) analysis** to both products and customers  
+- Analyzed **return behavior** to identify high-risk SKUs  
+- Created **professional, executive-ready Tableau dashboards**  
+- Translated analytical results into **clear business insights and recommendations**  
 
-**Project Structure**
+## Project Structure
 
-ecommerce-project/
-
+```text
+ecommerce-analytics-sql-tableau/
 │
-
-├── data/            # Raw / cleaned dataset
-
-├── sql/             # SQL scripts & views
-
+├── data/            # Raw and processed datasets
+├── notebooks/       # Data inspection, cleaning, and EDA notebooks
+├── sql/             # SQL scripts and analytical views
 ├── tableau/         # Tableau workbook
-
 ├── reports/         # Dashboard screenshots
-
 └── README.md        # Project documentation
-
-**Outcome**
-
-This project demonstrates:
-
-Strong SQL data modeling
-
-Correct KPI logic
-
-Professional Tableau dashboard design
-
-Clear business storytelling
-
-Real-world analytics thinking
